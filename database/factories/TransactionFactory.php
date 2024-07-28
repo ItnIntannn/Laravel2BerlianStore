@@ -16,8 +16,14 @@ class TransactionFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
-            //
+            // 'nota' => $fake->unique()->numerify('C#########'),
+            // 'id_user' => 0,
+            // 'id_customer' => 0,
+            // 'pembeli' =>
+            // 'date' =>
+            // 'desc' => 
         ];
     }
 }

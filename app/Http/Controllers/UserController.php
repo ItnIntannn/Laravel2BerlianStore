@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -12,7 +15,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user.list');
+        $user = User::all();
+
+        return view('user.list', [
+            'data' => $user,
+        ]);
     }
 
     /**
@@ -28,7 +35,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $path = $request->file('file')->store('avatar');
+
+        $request->merge(['avatar' => $path]);
+        User::create($request->all());
+
+        return redirect('/users')->with([
+            'mess' => 'Data berhasil disimpan 🐷',
+        ]);
     }
 
     /**
@@ -36,7 +50,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return view('stuff.add', [
+            'data' => $user,
+        ]);
     }
 
     /**
@@ -52,7 +68,13 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $user->fill($request->all());
+
+        $user->save();
+
+        return redirect('/users')->with([
+            'mess' => 'Data berhasil diismpan 🐷',
+        ]);
     }
 
     /**
@@ -60,7 +82,16 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if($user->avatar){
+            Storage::delete($user->avatar);
+
+        }
+
+        $user->delete();
+
+        return redirect('/users')->with([
+            'mess' => 'Data berhasil dihapus 🐷',
+        ]);
     }
 
 }
